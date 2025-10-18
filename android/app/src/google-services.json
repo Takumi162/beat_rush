@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "380186307137",
+    "project_id": "beatrush-d7050",
+    "storage_bucket": "beatrush-d7050.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380186307137:android:ef2e83a493797ed00bb4c0",
+        "android_client_info": {
+          "package_name": "com.example.beat_rush"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxDmVKoVzuBOlziZcINo8TZNZp-LJZy7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
