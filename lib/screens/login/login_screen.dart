@@ -8,11 +8,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _nicknameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('プロフィール設定')),
-      body: const Center(child: Text('ここにUIを追加していきます')),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 24),
+
+            const Text(
+              'ニックネームを入力してください',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: _nicknameController,
+              decoration: const InputDecoration(hintText: 'たくみ など'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
