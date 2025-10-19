@@ -15,6 +15,39 @@ class _LoginScreenState extends State<LoginScreen> {
     {'key': 'jake', 'path': 'assets/icons/jake.png'},
     {'key': 'finn', 'path': 'assets/icons/finn.png'},
   ];
+
+  // ✅ STEP 2：バリデーション条件
+  bool get _isFormValid {
+    final nickname = _nicknameController.text.trim();
+    return nickname.isNotEmpty && _selectedIcon != null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // ✅ STEP 1：リスナー登録
+    _nicknameController.addListener(_onNicknameChanged);
+  }
+
+  void _onNicknameChanged() {
+    setState(() {}); // 入力が変わるたびUIを更新
+  }
+
+  @override
+  void dispose() {
+    // ✅ リスナーを明示的に解除して安全に解放
+    _nicknameController.removeListener(_onNicknameChanged);
+    _nicknameController.dispose();
+    super.dispose();
+  }
+
+  void _onConfirm() {
+    final nickname = _nicknameController.text.trim();
+    debugPrint('ニックネーム: $nickname');
+    debugPrint('選択アイコン: $_selectedIcon');
+    // 次のSTEPでFirebase処理を追加予定
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,11 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () {
-                final nickname = _nicknameController.text.trim();
-                debugPrint('ニックネーム: $nickname');
-                debugPrint('選択アイコン: $_selectedIcon');
-              },
+              onPressed: _isFormValid ? _onConfirm : null,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
