@@ -66,6 +66,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               }).toList(),
             ),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                final nickname = _nicknameController.text.trim();
+                debugPrint('ニックネーム: $nickname');
+                debugPrint('選択アイコン: $_selectedIcon');
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+              child: const Text('確定'),
+            ),
           ],
         ),
       ),
