@@ -133,6 +133,29 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: const Text('確定'),
             ),
+
+            // 開発ようにサインアウトボタン配置
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () async {
+                final user = await _authService.getCurrentUid();
+                if (user != null) {
+                  await _authService.signOut();
+                  debugPrint('✅ サインアウトしました。currentUserをリセットしました。');
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text('サインアウトしました')));
+                  }
+                } else {
+                  debugPrint('⚠️ サインインしていません。');
+                }
+              },
+              child: const Text(
+                'サインアウト（デバッグ用）',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
           ],
         ),
       ),

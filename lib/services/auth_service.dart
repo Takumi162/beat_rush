@@ -22,4 +22,9 @@ class AuthService {
   String? getCurrentUid() {
     return _auth.currentUser?.uid;
   }
+
+  // 開発用にサインアウト関数を用意
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 }
