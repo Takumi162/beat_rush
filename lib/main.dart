@@ -6,6 +6,8 @@ import 'services/auth_service.dart'; // ← あなたのAuthServiceを使用
 import 'package:go_router/go_router.dart';
 import './screens/login/login_screen.dart';
 import './screens/home/home_screen.dart';
+import './screens/room/create_room_screen.dart';
+import './screens/room/join_room_screen.dart';
 
 /// 🔹 AuthServiceのインスタンス（アプリ全体で使う）
 final AuthService _authService = AuthService();
@@ -18,6 +20,14 @@ final _router = GoRouter(
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
+    GoRoute(
+      path: '/room/create',
+      builder: (context, state) => const CreateRoomScreen(),
+    ),
+    GoRoute(
+      path: '/room/join',
+      builder: (context, state) => const JoinRoomScreen(),
+    ),
   ],
 
   /// 🔸 ログイン状態によって遷移を出し分け
