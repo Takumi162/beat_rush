@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _nicknameController = TextEditingController();
+  final _authService = AuthService();
 
   String? _selectedIcon;
   final List<Map<String, String>> _icons = [
@@ -27,6 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     // ✅ STEP 1：リスナー登録
     _nicknameController.addListener(_onNicknameChanged);
+
+    // すでにログイン済みならスキップ（任意）
+    final uid = _authService.getCurrentUid();
+    if (uid != null) {
+      debugPrint("ログイン済み"); //ホーム画面へ遷移するコードを後から実装する
+    }
   }
 
   void _onNicknameChanged() {
@@ -41,11 +49,29 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _onConfirm() {
+  void _onConfirm() async {
     final nickname = _nicknameController.text.trim();
-    debugPrint('ニックネーム: $nickname');
-    debugPrint('選択アイコン: $_selectedIcon');
-    // 次のSTEPでFirebase処理を追加予定
+    final iconKey = _selectedIcon;
+
+    if (!_isFormValid) return;
+
+    try {
+      // 🔹 UIDを取得（ログイン済みなら再利用）
+      final uid = await _authService.signInAnonymously();
+
+      debugPrint('ログイン完了 UID: $uid');
+      debugPrint('ニックネーム: $nickname');
+      debugPrint('選択アイコン: $iconKey');
+
+      // このあとUserServiceでDatabase保存を行う予定
+    } catch (e) {
+      debugPrint('ログイン中にエラー: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('ログインに失敗しました。')));
+      }
+    }
   }
 
   @override
