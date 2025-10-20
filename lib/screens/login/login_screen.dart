@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../services/user_service.dart';
 
+import 'package:go_router/go_router.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -70,6 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
         nickname: nickname,
         iconKey: iconKey!,
       );
+
+      if (!mounted) return;
+
+      context.go('/home');
     } catch (e) {
       debugPrint('ログイン中にエラー: $e');
       if (context.mounted) {
