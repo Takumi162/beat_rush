@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
+import '../../services/user_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -64,6 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
       debugPrint('選択アイコン: $iconKey');
 
       // このあとUserServiceでDatabase保存を行う予定
+      await UserService().saveUserProfile(
+        uid: uid,
+        nickname: nickname,
+        iconKey: iconKey!,
+      );
     } catch (e) {
       debugPrint('ログイン中にエラー: $e');
       if (context.mounted) {
