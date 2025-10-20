@@ -22,11 +22,11 @@ final _router = GoRouter(
 
   /// 🔸 ログイン状態によって遷移を出し分け
   redirect: (context, state) async {
-    final uid = _authService.getCurrentUid();
+    final isValid = await _authService.isUserValid(); // ← ここがサーバー確認
     final loggingIn = state.matchedLocation == '/login';
 
-    if (uid == null) {
-      // 未ログイン → /login へ
+    if (!isValid) {
+      // 無効なユーザー or 未ログイン → /login へ
       return loggingIn ? null : '/login';
     }
 
