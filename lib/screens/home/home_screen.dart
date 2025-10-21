@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/user_service.dart';
 import '../room/components/user_profile_display.dart';
 
+import 'package:go_router/go_router.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -48,7 +50,26 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : const Text('読み込み中...'),
       ),
-      body: const Center(child: Text('ホーム画面')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 🔹 部屋をつくるボタン
+            ElevatedButton(
+              onPressed: () => context.go('/room/create'),
+              child: const Text('部屋をつくる'),
+            ),
+
+            const SizedBox(height: 16),
+
+            // 🔹 部屋に入るボタン
+            ElevatedButton(
+              onPressed: () => context.go('/room/join'),
+              child: const Text('部屋に入る'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
