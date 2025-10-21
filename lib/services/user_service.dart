@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/widgets.dart';
 
 class UserService {
   final DatabaseReference _db = FirebaseDatabase.instance.ref();
@@ -32,7 +33,7 @@ class UserService {
         return null;
       }
     } catch (e) {
-      print('❌ ユーザーデータ取得中にエラー: $e');
+      debugPrint('❌ ユーザーデータ取得中にエラー: $e');
       return null;
     }
   }

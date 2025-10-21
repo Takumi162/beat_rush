@@ -1,7 +1,12 @@
+import 'package:go_router/go_router.dart';
+
+import '../../services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/room_service.dart';
 import 'components/room_code_display.dart';
+
+import 'package:go_router/go_router.dart';
 
 class CreateRoomScreen extends StatefulWidget {
   const CreateRoomScreen({super.key});
@@ -12,6 +17,7 @@ class CreateRoomScreen extends StatefulWidget {
 
 class _CreateRoomScreenState extends State<CreateRoomScreen> {
   final RoomService _roomService = RoomService();
+  final UserService _userService = UserService();
   String roomCode = '------';
   String themeName = '未選択';
   bool isLoading = false;
@@ -33,6 +39,16 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
       return;
     }
 
+    final userData = await _userService.getUserProfile(uid);
+    if (userData == null) {
+      debugPrint('ユーザデータが見つかりません');
+      setState(() => isLoading = false);
+      return;
+    }
+
+    final nickname = userData['nickname'] as String? ?? '名無し';
+    final iconKey = userData['icon'] as String? ?? 'finn';
+
     // 🔹 6桁コードを生成
     final code = _roomService.generateCode();
 
@@ -40,8 +56,8 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     await _roomService.createRoom(
       code: code,
       ownerUid: uid,
-      nickname: 'たくみ', // 後でUserServiceから取得するよう変更
-      iconKey: 'finn',
+      nickname: nickname, // 後でUserServiceから取得するよう変更
+      iconKey: iconKey,
     );
 
     // 🔹 画面に反映
@@ -107,7 +123,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.of(context).maybePop(),
+                onPressed: () => context.go('/home'),
                 child: const Text('ホームに戻る'),
               ),
             ),
