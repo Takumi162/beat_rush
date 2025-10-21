@@ -18,4 +18,22 @@ class UserService {
       'createdAt': DateTime.now().toIso8601String(),
     });
   }
+
+  /// 成功時は `{'nickname': ..., 'icon': ...}` のようなMapを返す。
+  /// 該当データが存在しない場合は `null` を返す。
+  Future<Map<String, dynamic>?> getUserProfile(String uid) async {
+    try {
+      final snapshot = await _db.child('users/$uid').get();
+
+      if (snapshot.exists) {
+        final data = Map<String, dynamic>.from(snapshot.value as Map);
+        return data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('❌ ユーザーデータ取得中にエラー: $e');
+      return null;
+    }
+  }
 }
