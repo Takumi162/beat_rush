@@ -1,3 +1,4 @@
+import 'package:beat_rush/constants/icon_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/user_service.dart';
@@ -29,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (data != null) {
       setState(() {
         nickname = data['nickname'] as String?;
-        iconPath = data['icon'] as String?;
+        final iconKey = data['icon'] as String?;
+        iconPath = IconPaths.resolve(iconKey ?? '');
       });
     }
   }
