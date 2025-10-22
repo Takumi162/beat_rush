@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/room_service.dart';
 import 'components/room_code_display.dart';
 
-import 'package:go_router/go_router.dart';
+import '../room/components/waiting_players_list.dart';
 
 class CreateRoomScreen extends StatefulWidget {
   const CreateRoomScreen({super.key});
@@ -85,6 +85,11 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
         child: Column(
           children: [
             RoomCodeDisplay(roomCode: roomCode),
+
+            const SizedBox(height: 16),
+
+            Expanded(child: WaitingPlayersList(roomCode: roomCode)),
+
             const SizedBox(height: 16),
             Row(
               children: [
@@ -99,10 +104,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text('ルール：5本先取', style: TextStyle(fontSize: 16)),
-            ),
+
             const Spacer(),
             SizedBox(
               width: double.infinity,

@@ -37,4 +37,26 @@ class RoomService {
       'createdAt': DateTime.now().toIso8601String(),
     });
   }
+
+  /// 🔹 プレイヤー一覧をリアルタイム監視する
+  Stream<List<Map<String, dynamic>>> watchPlayers(String code) {
+    final playersRef = _db.child('rooms/$code/players');
+
+    return playersRef.onValue.map((event) {
+      if (!event.snapshot.exists) return <Map<String, dynamic>>[];
+
+      // Firebaseから取得したデータをMapに変換
+      final raw = Map<String, dynamic>.from(event.snapshot.value as Map);
+      final players = raw.entries.map((entry) {
+        final playerData = Map<String, dynamic>.from(entry.value as Map);
+        return {
+          'uid': entry.key,
+          'nickname': playerData['nickname'],
+          'icon': playerData['icon'],
+        };
+      }).toList();
+
+      return players;
+    });
+  }
 }
