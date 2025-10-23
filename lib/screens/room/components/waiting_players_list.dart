@@ -15,9 +15,7 @@ class WaitingPlayersList extends StatelessWidget {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _roomService.watchPlayers(roomCode),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        if (snapshot.connectionState == ConnectionState.waiting) {}
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Text(
