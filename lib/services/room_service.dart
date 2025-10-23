@@ -59,4 +59,30 @@ class RoomService {
       return players;
     });
   }
+
+  /// 🔹 ルームに参加する
+  Future<bool> joinRoom({
+    required String code,
+    required String uid,
+    required String nickname,
+    required String iconKey,
+  }) async {
+    final roomRef = _db.child('rooms/$code');
+
+    // ルームが存在するか確認
+    final roomSnapshot = await roomRef.get();
+    if (!roomSnapshot.exists) {
+      return false; // ❌ ルームが存在しない
+    }
+
+    // 🔹 すでに同じUIDで登録済みでなければ追加
+    final playerRef = roomRef.child('players/$uid');
+    await playerRef.set({
+      'nickname': nickname,
+      'icon': iconKey,
+      'joinedAt': DateTime.now().toIso8601String(),
+    });
+
+    return true; // ✅ 成功
+  }
 }
