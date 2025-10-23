@@ -24,7 +24,11 @@ class _LobbyScreenState extends State<LobbyScreen> {
   bool isOwner = false;
   String? ownerUid;
 
-  ItunesTrack? track;
+  // 🔹 ValueNotifierで最小限のUI更新を管理
+  final ValueNotifier<String> trackTitle = ValueNotifier<String>('---');
+  final ValueNotifier<String> artistName = ValueNotifier<String>('---');
+  final ValueNotifier<String> albumArtUrl = ValueNotifier<String>('');
+
   bool isLoadingTrack = false;
   bool _isFetching = false; // 🚫 二重リクエスト防止
 
@@ -38,6 +42,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
   @override
   void dispose() {
     _audioPlayer.dispose();
+    trackTitle.dispose();
+    artistName.dispose();
+    albumArtUrl.dispose();
     super.dispose();
   }
 
@@ -52,36 +59,32 @@ class _LobbyScreenState extends State<LobbyScreen> {
     }
   }
 
-  /// 🔹 曲を取得して自動再生
+  /// 🎵 曲を取得して自動再生
   Future<void> _fetchAndPlayTrack() async {
     if (_isFetching) return;
-    setState(() {
-      isLoadingTrack = true;
-      _isFetching = true;
-    });
+    _isFetching = true;
+    isLoadingTrack = true;
+    setState(() {});
 
     try {
       final newTrack = await _itunesService.fetchRandomTrack();
-      setState(() {
-        track = newTrack;
-      });
 
-      // 🎧 自動再生開始
+      // 🔹 曲情報をValueNotifier経由で更新（UI部分更新のみ）
+      trackTitle.value = newTrack.trackName;
+      artistName.value = newTrack.artistName;
+      albumArtUrl.value = newTrack.artworkUrl;
+
+      // 🎧 自動再生
       await _audioPlayer.play(UrlSource(newTrack.previewUrl));
 
-      // 再生が自然終了したら次の曲を自動再生
-      _audioPlayer.onPlayerComplete.listen((_) {
-        _fetchAndPlayTrack();
-      });
+      // 🔁 再生終了時 → 次の曲を自動再生
+      _audioPlayer.onPlayerComplete.listen((_) => _fetchAndPlayTrack());
     } catch (e) {
       debugPrint('iTunes曲取得エラー: $e');
     } finally {
-      if (mounted) {
-        setState(() {
-          isLoadingTrack = false;
-          _isFetching = false;
-        });
-      }
+      _isFetching = false;
+      isLoadingTrack = false;
+      if (mounted) setState(() {});
     }
   }
 
@@ -107,19 +110,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
             Expanded(child: WaitingPlayersList(roomCode: widget.roomCode)),
             const SizedBox(height: 16),
 
-            // 🔹 曲情報表示
-            if (isLoadingTrack)
+            // 🔹 曲情報カード
+            if (isLoadingTrack && albumArtUrl.value.isEmpty)
               const Center(child: CircularProgressIndicator())
-            else if (track != null)
-              ItunesAlbumCard(
-                albumTitle: track!.trackName,
-                artistName: track!.artistName,
-                albumArtUrl: track!.artworkUrl,
-                trackName: track!.trackName,
-                onSkip: _fetchAndPlayTrack, // 🎵 スキップで自動再生
-              )
             else
-              const Text('曲情報の取得に失敗しました'),
+              ItunesAlbumCard(
+                albumArtUrlNotifier: albumArtUrl,
+                trackTitleNotifier: trackTitle,
+                artistNameNotifier: artistName,
+                onSkip: _fetchAndPlayTrack,
+              ),
 
             const SizedBox(height: 16),
             if (isOwner)
