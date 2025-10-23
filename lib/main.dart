@@ -8,6 +8,7 @@ import './screens/login/login_screen.dart';
 import './screens/home/home_screen.dart';
 import './screens/room/create_room_screen.dart';
 import './screens/room/join_room_screen.dart';
+import './screens/room/lobby_screen.dart';
 
 /// 🔹 AuthServiceのインスタンス（アプリ全体で使う）
 final AuthService _authService = AuthService();
@@ -27,6 +28,13 @@ final _router = GoRouter(
     GoRoute(
       path: '/room/join',
       builder: (context, state) => const JoinRoomScreen(),
+    ),
+    GoRoute(
+      path: '/room/lobby/:code',
+      builder: (context, state) {
+        final code = state.pathParameters['code']!;
+        return LobbyScreen(roomCode: code);
+      },
     ),
   ],
 

@@ -85,4 +85,17 @@ class RoomService {
 
     return true; // ✅ 成功
   }
+
+  // 部屋の情報を取得し、Map型で返す。
+  Future<Map<String, dynamic>?> getRoomData(String code) async {
+    final snap = await _db.child('rooms/$code').get();
+    if (!snap.exists) return null;
+    return Map<String, dynamic>.from(snap.value as Map);
+  }
+
+  /// 🔹 ルームを削除する（オーナーのみ呼び出し想定）
+  Future<void> deleteRoom(String code) async {
+    final roomRef = _db.child('rooms/$code');
+    await roomRef.remove();
+  }
 }

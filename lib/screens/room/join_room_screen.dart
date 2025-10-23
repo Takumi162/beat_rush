@@ -119,7 +119,7 @@ class _JoinRoomScreenState extends State<JoinRoomScreen> {
     if (!mounted) return;
 
     if (success) {
-      context.go('/room/create'); // 後でLobbyに変更
+      context.go('/room/lobby/$code'); // 後でLobbyに変更
     } else {
       setState(() {
         errorMessage = '指定されたルームコードが存在しません';

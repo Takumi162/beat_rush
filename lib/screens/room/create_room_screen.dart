@@ -117,7 +117,10 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (!mounted) return;
+                  context.go('/room/lobby/$roomCode');
+                },
                 child: const Text('準備完了'),
               ),
             ),
