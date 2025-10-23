@@ -118,7 +118,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-                child: const Text('ゲーム開始'),
+                child: const Text('準備完了'),
               ),
             ),
             const SizedBox(height: 8),
