@@ -28,6 +28,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
   final ValueNotifier<String> trackTitle = ValueNotifier<String>('---');
   final ValueNotifier<String> artistName = ValueNotifier<String>('---');
   final ValueNotifier<String> albumArtUrl = ValueNotifier<String>('');
+  final ValueNotifier<String> appleMusicUrl = ValueNotifier<String>(
+    '',
+  ); // ← 追加！
 
   bool isLoadingTrack = false;
   bool _isFetching = false; // 🚫 二重リクエスト防止
@@ -45,6 +48,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
     trackTitle.dispose();
     artistName.dispose();
     albumArtUrl.dispose();
+    appleMusicUrl.dispose(); // ← 追加！
     super.dispose();
   }
 
@@ -73,6 +77,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
       trackTitle.value = newTrack.trackName;
       artistName.value = newTrack.artistName;
       albumArtUrl.value = newTrack.artworkUrl;
+      appleMusicUrl.value = newTrack.trackViewUrl ?? ''; // ← 追加！
 
       // 🎧 自動再生
       await _audioPlayer.play(UrlSource(newTrack.previewUrl));
@@ -118,6 +123,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
                 albumArtUrlNotifier: albumArtUrl,
                 trackTitleNotifier: trackTitle,
                 artistNameNotifier: artistName,
+                appleMusicUrl: appleMusicUrl.value.isNotEmpty
+                    ? appleMusicUrl.value
+                    : null, // ← ValueNotifierからURLを受け渡し
                 onSkip: _fetchAndPlayTrack,
               ),
 

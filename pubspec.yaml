@@ -39,6 +39,7 @@ dependencies:
   firebase_database: ^12.0.3
   go_router: ^16.2.5
   audioplayers: ^6.5.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
