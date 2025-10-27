@@ -7,6 +7,7 @@ import '../../services/room_service.dart';
 import 'components/room_code_display.dart';
 
 import '../room/components/waiting_players_list.dart';
+import '../../services/itunes_service.dart';
 
 class CreateRoomScreen extends StatefulWidget {
   const CreateRoomScreen({super.key});
@@ -109,7 +110,17 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  final selectedArtist = await context.push<ItunesArtist>(
+                    '/theme/select',
+                  );
+                  if (selectedArtist != null) {
+                    setState(() {
+                      themeName = selectedArtist.artistName;
+                    });
+                  }
+                },
+
                 child: const Text('テーマを選ぶ'),
               ),
             ),
