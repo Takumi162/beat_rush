@@ -93,10 +93,30 @@ class _LobbyScreenState extends State<LobbyScreen> {
     }
   }
 
+  bool _isLeaving = false;
+
   Future<void> _leaveRoom() async {
     if (isOwner) await _roomService.deleteRoom(widget.roomCode);
     if (!mounted) return;
-    context.go('/room/create');
+
+    if (_isLeaving) return; // 🚫 二重呼び出し防止
+    _isLeaving = true;
+
+    try {
+      if (isOwner) {
+        await _roomService.deleteRoom(widget.roomCode);
+      }
+      if (!mounted) return;
+
+      // 🔹 Navigatorロックを避ける
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.go('/room/create');
+      });
+    } catch (e) {
+      debugPrint('部屋退出中エラー: $e');
+    } finally {
+      _isLeaving = false;
+    }
   }
 
   @override

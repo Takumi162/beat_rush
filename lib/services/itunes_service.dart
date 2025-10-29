@@ -43,15 +43,7 @@ class ItunesService {
 
   /// 🎵 ランダムジャンルから1曲を取得
   Future<ItunesTrack> fetchRandomTrack() async {
-    final genres = [
-      'pop',
-      'rock',
-      'anime',
-      'jazz',
-      'hiphop',
-      'idol',
-      'classical',
-    ];
+    final genres = ['pop'];
     final randomGenre = genres[Random().nextInt(genres.length)];
 
     final uri = Uri.parse(

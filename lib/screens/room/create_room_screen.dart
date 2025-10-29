@@ -8,6 +8,7 @@ import 'components/room_code_display.dart';
 
 import '../room/components/waiting_players_list.dart';
 import '../../services/itunes_service.dart';
+import '../../services/spotify_service.dart'; // ← Spotifyサービスを使うならこれを追加
 
 class CreateRoomScreen extends StatefulWidget {
   const CreateRoomScreen({super.key});
@@ -111,12 +112,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  final selectedArtist = await context.push<ItunesArtist>(
+                  final selectedArtist = await context.push<SpotifyArtist?>(
                     '/theme/select',
                   );
                   if (selectedArtist != null) {
                     setState(() {
-                      themeName = selectedArtist.artistName;
+                      themeName = selectedArtist.name;
                     });
                   }
                 },
