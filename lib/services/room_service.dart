@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 
 /// ルーム作成や管理を行うサービス
 class RoomService {
@@ -97,5 +98,27 @@ class RoomService {
   Future<void> deleteRoom(String code) async {
     final roomRef = _db.child('rooms/$code');
     await roomRef.remove();
+  }
+
+  Future<void> updateTheme(String code, String themeName) async {
+    try {
+      await _db.child('rooms/$code/settings/themeId').set(themeName);
+      // ※既存構造に合わせて settings 配下に保存
+      debugPrint('✅ テーマ更新完了！: $themeName');
+    } catch (e) {
+      debugPrint('❌ テーマ更新失敗: $e');
+      rethrow;
+    }
+  }
+
+  /// 🔹 ステータス（waiting, ready, playingなど）を更新
+  Future<void> updateStatus(String code, String status) async {
+    try {
+      await _db.child('rooms/$code/status').set(status);
+      debugPrint('✅ 状態更新成功！: $status');
+    } catch (e) {
+      debugPrint('❌ 状態更新失敗: $e');
+      rethrow;
+    }
   }
 }

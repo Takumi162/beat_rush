@@ -7,7 +7,6 @@ import '../../services/room_service.dart';
 import 'components/room_code_display.dart';
 
 import '../room/components/waiting_players_list.dart';
-import '../../services/itunes_service.dart';
 import '../../services/spotify_service.dart'; // ← Spotifyサービスを使うならこれを追加
 
 class CreateRoomScreen extends StatefulWidget {
@@ -129,9 +128,30 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  if (!mounted) return;
-                  context.go('/room/lobby/$roomCode');
+                onPressed: () async {
+                  if (themeName == '未選択') {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('テーマを選択してください')),
+                    );
+                    return;
+                  }
+
+                  try {
+                    // 🔹 テーマを保存
+                    await _roomService.updateTheme(roomCode, themeName);
+
+                    // 🔹 ステータスを「ready」に更新
+                    await _roomService.updateStatus(roomCode, 'ready');
+
+                    // 🔹 ロビーへ遷移
+                    if (!mounted) return;
+                    context.go('/room/lobby/$roomCode');
+                  } catch (e) {
+                    debugPrint('準備完了処理エラー: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('通信エラーが発生しました')),
+                    );
+                  }
                 },
                 child: const Text('準備完了'),
               ),
